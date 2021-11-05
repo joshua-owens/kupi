@@ -1,4 +1,4 @@
-# ansible-pimad
+# kupi
 
 Ansible playbook to provision K3s on a  raspberry pi cluster. 
 

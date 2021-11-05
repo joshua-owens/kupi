@@ -1,0 +1,19 @@
+- name: Update apt packages
+  become: yes
+  apt:
+    update_cache: yes
+
+- name: Populate service facts
+  service_facts:
+
+- name: Install chrony to sync clock
+  become: yes
+  apt:
+    pkg:
+      - chrony
+
+- name: Start the chrony service
+  become: yes
+  service: 
+    name: chrony
+    state: started

@@ -22,3 +22,4 @@
   service: 
     name: chrony
     state: started
+  when: '"chrony" not in ansible_facts.services'

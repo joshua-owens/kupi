@@ -6,11 +6,16 @@
 - name: Populate service facts
   service_facts:
 
+- name: Gather package facts
+  package_facts:
+    manager: apt
+
 - name: Install chrony to sync clock
   become: yes
   apt:
     pkg:
       - chrony
+  when: '"chrony" not in ansible_facts.packages'
 
 - name: Start the chrony service
   become: yes

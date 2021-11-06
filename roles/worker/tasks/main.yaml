@@ -1,2 +1,3 @@
-- name: Placeholder
-  shell: echo "hello world"
+- name: Testing K3s token
+  debug:
+    msg: "[Worker] K3S_TOKEN_HOLDER K3S token is {{ hostvars['K3S_TOKEN_HOLDER']['token'] }}"

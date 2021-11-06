@@ -11,7 +11,8 @@
   become: yes 
   register: k3s_token 
     
-- name: "Add K3S token to dummy host"
+- name: "Add K3S leader variables to dummy host"
   add_host:
-    name:   "K3S_TOKEN_HOLDER"
+    name:   "K3S_LEADER"
     token:  "{{ k3s_token.stdout }}"
+    ip: "{{ ansible_default_ipv4.address }}"

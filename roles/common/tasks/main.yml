@@ -23,3 +23,14 @@
     name: chrony
     state: started
   when: '"chrony" not in ansible_facts.services'
+
+
+- name: Copy cmdline.txt 
+  become: yes
+  copy:
+    src: ../templates/cmdline.txt
+    dest: /boot/firmware/cmdline.txt
+
+- name: Reboot for cmdline.txt updates 
+  reboot:
+    reboot_timeout: 3600

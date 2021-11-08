@@ -33,5 +33,6 @@
 # TODO check contents of file to skip
 
 - name: Reboot for cmdline.txt updates 
+  become: yes
   reboot:
     reboot_timeout: 3600

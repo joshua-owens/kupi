@@ -30,6 +30,7 @@
   copy:
     src: ../templates/cmdline.txt
     dest: /boot/firmware/cmdline.txt
+# TODO check contents of file to skip
 
 - name: Reboot for cmdline.txt updates 
   reboot:

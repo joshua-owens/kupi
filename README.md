@@ -1,6 +1,6 @@
 # kupi
 
-Ansible playbook to provision K3s on a  raspberry pi cluster. 
+Ansible playbook to provision K3s on a  raspberry pi cluster. Inspired by [Greg Jeanmart](https://greg.jeanmart.me/2020/04/13/build-your-very-own-self-hosting-platform-wi/).
 
 ## Requirements
 

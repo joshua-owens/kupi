@@ -1,15 +1,10 @@
-- name: Update apt packages
-  become: yes
-  apt:
-    update_cache: yes
-
 - name: Populate service facts
   service_facts:
 
 - name: Gather package facts
   package_facts:
-    manager: apt
 
+    manager: apt
 - name: Install chrony to sync clock
   become: yes
   apt:
@@ -24,6 +19,11 @@
     state: started
   when: '"chrony" not in ansible_facts.services'
 
+- name: Update apt packages
+  become: yes
+  apt:
+    update_cache: yes
+
 
 - name: Copy cmdline.txt 
   become: yes
@@ -35,4 +35,4 @@
 - name: Reboot for cmdline.txt updates 
   become: yes
   reboot:
-    reboot_timeout: 3600
+    reboot_timeout: 120 

@@ -3,8 +3,8 @@
 
 - name: Gather package facts
   package_facts:
-
     manager: apt
+
 - name: Install chrony to sync clock
   become: yes
   apt:

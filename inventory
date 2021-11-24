@@ -1,9 +1,9 @@
 [leader]
-10.0.0.174
+10.0.0.172
 
 [workers]
-10.0.0.121
-10.0.0.92
+10.0.0.122
+10.0.0.93
 
 [leader:vars]
 ansible_python_interpreter=/usr/bin/python3

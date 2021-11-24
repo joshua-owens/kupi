@@ -36,3 +36,8 @@
   become: yes
   reboot:
     reboot_timeout: 120 
+
+- name: Install microK8s
+  snap:
+    name: microk8s
+    classic: yes

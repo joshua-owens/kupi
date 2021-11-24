@@ -1,13 +1,12 @@
-- name: Debug 
+- name: Worker Test 
   debug:
-    var: hostvars['K3S_LEADER']
+    msg: "Worker Test"
 
-
-- name: Install K3s 
-  shell: curl -sfL https://get.k3s.io | sh -
-  become: yes 
-  environment:
-    K3S_KUBECONFIG_MODE: "644"
-    K3S_URL: "https://{{ hostvars['K3S_LEADER']['ip'] }}:6443"
-    K3S_TOKEN: "{{ hostvars['K3S_LEADER']['token'] }}"
-  when: '"k3s-agent" not in ansible_facts.services'
+# - name: Install K3s 
+#   shell: curl -sfL https://get.k3s.io | sh -
+#   become: yes 
+#   environment:
+#     K3S_KUBECONFIG_MODE: "644"
+#     K3S_URL: "https://{{ hostvars['K3S_LEADER']['ip'] }}:6443"
+#     K3S_TOKEN: "{{ hostvars['K3S_LEADER']['token'] }}"
+#   when: '"k3s-agent" not in ansible_facts.services'

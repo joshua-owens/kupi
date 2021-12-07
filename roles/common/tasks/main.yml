@@ -51,4 +51,5 @@
   snap:
     name: microk8s
     classic: yes
+    channel: 1.18/stable
   when: '"microk8s" not in ansible_facts.services'

@@ -25,20 +25,30 @@
     update_cache: yes
 
 
+- name: Check cmdline.txt
+  command: grep -Fxq "cgroup" /boot/firmware/cmdline.txt
+  register: check_cmdline
+  check_mode: no
+  ignore_errors: yes
+  changed_when: no
+
+
 - name: Copy cmdline.txt 
   become: yes
   copy:
     src: ../templates/cmdline.txt
     dest: /boot/firmware/cmdline.txt
-# TODO check contents of file to skip
+  when: check_cmdline.rc == 0
 
 - name: Reboot for cmdline.txt updates 
   become: yes
   reboot:
     reboot_timeout: 120 
+  when: check_cmdline.rc == 0
 
 - name: Install microK8s
   become: yes
   snap:
     name: microk8s
     classic: yes
+  when: '"microk8s" not in ansible_facts.services'

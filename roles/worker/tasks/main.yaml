@@ -10,3 +10,7 @@
 #     K3S_URL: "https://{{ hostvars['K3S_LEADER']['ip'] }}:6443"
 #     K3S_TOKEN: "{{ hostvars['K3S_LEADER']['token'] }}"
 #   when: '"k3s-agent" not in ansible_facts.services'
+#
+- name: Join cluster
+  command: "microk8s.join {{ hostvars['LEADER_NODE']['connection_string'] }}"
+  become: yes

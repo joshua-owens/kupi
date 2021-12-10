@@ -19,11 +19,10 @@
     state: started
   when: '"chrony" not in ansible_facts.services'
 
-#- name: Update apt packages
-  #become: yes
-  #apt:
-    #update_cache: yes
-
+# - name: Update apt packages
+#   become: yes
+#   apt:
+#     update_cache: yes
 
 - name: Check cmdline.txt
   command: grep -Fxq "cgroup" /boot/firmware/cmdline.txt
@@ -31,7 +30,6 @@
   check_mode: no
   ignore_errors: yes
   changed_when: no
-
 
 - name: Copy cmdline.txt 
   become: yes
@@ -45,11 +43,3 @@
   reboot:
     reboot_timeout: 120 
   when: check_cmdline.rc == 0
-
-- name: Install microK8s
-  become: yes
-  snap:
-    name: microk8s
-    classic: yes
-    channel: 1.18/stable
-  when: '"microk8s" not in ansible_facts.services'

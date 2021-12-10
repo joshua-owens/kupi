@@ -2,7 +2,6 @@
   debug:
     var: hostvars['K3S_LEADER']
 
-
 - name: Install K3s 
   shell: curl -sfL https://get.k3s.io | sh -
   become: yes 

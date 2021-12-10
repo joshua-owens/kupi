@@ -42,3 +42,4 @@
   become: yes
   reboot:
     reboot_timeout: 120 
+  when: check_cmdline.rc == 0

@@ -36,10 +36,8 @@
   copy:
     src: ../templates/cmdline.txt
     dest: /boot/firmware/cmdline.txt
-  when: check_cmdline.rc == 0
 
 - name: Reboot for cmdline.txt updates 
   become: yes
   reboot:
     reboot_timeout: 120 
-  when: check_cmdline.rc == 0

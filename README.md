@@ -3,7 +3,11 @@
 Ansible playbook to provision K3s on a  raspberry pi cluster. Inspired by [Greg Jeanmart](https://greg.jeanmart.me/2020/04/13/build-your-very-own-self-hosting-platform-wi/).
 
 ## Requirements
-
+- [Ansible](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html#installing-ansible-with-pip) intalled on host machine.
+  - WSL updates for `.bashrc`
+  ```
+  export PATH=$PATH:~/.local/bin
+  ```
 - At least 2 Raspberry Pis running [Ubuntu](https://ubuntu.com/download/raspberry-pi)
     - If you are in need of an example, [this](#my-hardware) is my hardware setup
     - SSH key for local machine set up across all of the Raspberry Pis

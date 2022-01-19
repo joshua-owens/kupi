@@ -1,6 +1,6 @@
-- name: Worker Test 
+- name: Debug 
   debug:
-    msg: "Worker Test"
+    var: hostvars['K3S_LEADER']
 
 - name: Install K3s 
   shell: curl -sfL https://get.k3s.io | sh -

@@ -1,7 +1,3 @@
-- name: Worker Test 
-  debug:
-    msg: "Worker Test"
-
 - name: Install K3s 
   shell: curl -sfL https://get.k3s.io | sh -
   become: yes 
@@ -10,13 +6,13 @@
     INSTALL_K3S_EXEC: " --no-deploy servicelb --no-deploy traefik" 
   when: '"k3s" not in ansible_facts.services'
     
-- name: Register leader node token 
-  command: microk8s.add-node 
+- name: Register K3s leader node token 
+  command: cat /var/lib/rancher/k3s/server/node-token
   become: yes 
-  register: connection_string 
+  register: k3s_token 
     
-- name: "Add leader variables to dummy host"
+- name: "Add K3S leader variables to dummy host"
   add_host:
-    name: "LEADER_NODE"
-    connection_string: "{{ connection_string.stdout }}"
+    name:   "K3S_LEADER"
+    token:  "{{ k3s_token.stdout }}"
     ip: "{{ ansible_default_ipv4.address }}"

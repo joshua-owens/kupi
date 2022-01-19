@@ -2,13 +2,13 @@
   debug:
     msg: "Worker Test"
 
-# - name: Install K3s 
-#   shell: curl -sfL https://get.k3s.io | sh -
-#   become: yes 
-#   environment:
-#     K3S_KUBECONFIG_MODE: "644"
-#     INSTALL_K3S_EXEC: " --no-deploy servicelb --no-deploy traefik" 
-#   when: '"k3s" not in ansible_facts.services'
+- name: Install K3s 
+  shell: curl -sfL https://get.k3s.io | sh -
+  become: yes 
+  environment:
+    K3S_KUBECONFIG_MODE: "644"
+    INSTALL_K3S_EXEC: " --no-deploy servicelb --no-deploy traefik" 
+  when: '"k3s" not in ansible_facts.services'
     
 - name: Register leader node token 
   command: microk8s.add-node 

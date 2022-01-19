@@ -19,10 +19,10 @@
     state: started
   when: '"chrony" not in ansible_facts.services'
 
-# - name: Update apt packages
-#   become: yes
-#   apt:
-#     update_cache: yes
+- name: Update apt packages
+  become: yes
+  apt:
+    update_cache: yes
 
 - name: Check cmdline.txt
   command: grep -Fxq "cgroup" /boot/firmware/cmdline.txt

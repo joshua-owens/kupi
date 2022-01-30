@@ -2,11 +2,22 @@
   debug:
     var: hostvars['K3S_LEADER']
 
-- name: Install K3s 
-  shell: curl -sfL https://get.k3s.io | sh -
-  become: yes 
+- name: Ensure kube directory exists
+  ansible.builtin.file:
+    path: "{{ ansible_env.HOME }}/.kube"
+    state: directory
+    mode: '0755'
+
+- name: Copy leader kubeconfig
+  copy:
+    dest: "{{ ansible_env.HOME }}/.kube/config"
+    content: "{{ hostvars['K3S_LEADER']['kubeconfig'] }}"
+
+- name: Install K3s
+  shell: "curl -sfL https://get.k3s.io | sh - "
+  become: yes
   environment:
     K3S_KUBECONFIG_MODE: "644"
     K3S_URL: "https://{{ hostvars['K3S_LEADER']['ip'] }}:6443"
     K3S_TOKEN: "{{ hostvars['K3S_LEADER']['token'] }}"
-  when: '"k3s-agent" not in ansible_facts.services'
+    K3S_NODE_NAME: "{{ ansible_default_ipv4.address }}"

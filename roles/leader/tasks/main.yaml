@@ -1,4 +1,4 @@
-- name: Install K3s 
+- name: Install K3s
   shell: curl -sfL https://get.k3s.io | sh -
   become: yes 
   environment:
@@ -9,10 +9,24 @@
 - name: Register K3s leader node token 
   command: cat /var/lib/rancher/k3s/server/node-token
   become: yes 
-  register: k3s_token 
+  register: k3s_token
+
+- name: Replace a localhost entry with actual IP
+  become: yes
+  replace:
+    path: /etc/rancher/k3s/k3s.yaml
+    regexp: '127.0.0.1'
+    replace: "{{ ansible_default_ipv4.address }}"
+    backup: yes
+
+- name: Copy kubeconfig contents
+  command: "cat /etc/rancher/k3s/k3s.yaml"
+  register: kubeconfig_contents
     
 - name: "Add K3S leader variables to dummy host"
+  become: yes
   add_host:
     name:   "K3S_LEADER"
     token:  "{{ k3s_token.stdout }}"
     ip: "{{ ansible_default_ipv4.address }}"
+    kubeconfig: "{{ kubeconfig_contents.stdout }}"

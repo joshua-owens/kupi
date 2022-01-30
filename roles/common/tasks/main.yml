@@ -23,6 +23,7 @@
   become: yes
   apt:
     update_cache: yes
+    upgrade: yes
 
 - name: Check cmdline.txt
   command: grep -Fxq "cgroup" /boot/firmware/cmdline.txt

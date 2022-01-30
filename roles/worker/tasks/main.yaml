@@ -1,7 +1,3 @@
-- name: Debug 
-  debug:
-    var: hostvars['K3S_LEADER']
-
 - name: Ensure kube directory exists
   ansible.builtin.file:
     path: "{{ ansible_env.HOME }}/.kube"

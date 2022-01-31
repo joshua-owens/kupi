@@ -1,6 +1,6 @@
 # kupi
 
-Ansible playbook to provision K3s on a  raspberry pi cluster. Inspired by [Greg Jeanmart](https://greg.jeanmart.me/2020/04/13/build-your-very-own-self-hosting-platform-wi/).
+IaC to provision K3s on a  raspberry pi cluster using Ansible and Terraform. Inspired by [Greg Jeanmart](https://greg.jeanmart.me/2020/04/13/build-your-very-own-self-hosting-platform-wi/).
 
 ## Requirements
 - [Ansible](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html#installing-ansible-with-pip) intalled on host machine.
@@ -8,6 +8,7 @@ Ansible playbook to provision K3s on a  raspberry pi cluster. Inspired by [Greg 
   ```
   export PATH=$PATH:~/.local/bin
   ```
+- [Terraform](https://learn.hashicorp.com/tutorials/terraform/install-cli) intalled on host machine.
 - At least 2 Raspberry Pis running [Ubuntu](https://ubuntu.com/download/raspberry-pi)
     - If you are in need of an example, [this](#my-hardware) is my hardware setup
     - SSH key for local machine set up across all of the Raspberry Pis

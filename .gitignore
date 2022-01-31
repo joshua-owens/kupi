@@ -1,1 +1,2 @@
-site.retry
+ansible/site.retry
+ansible/inventory

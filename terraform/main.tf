@@ -9,6 +9,7 @@ resource "helm_release" "metallb" {
   repository = "https://metallb.github.io/metallb"
   chart      = "metallb"
   namespace  = "kube-system"
+
   set {
     name  = "configInline.address-pools[0].name"
     value = "default"
@@ -18,6 +19,7 @@ resource "helm_release" "metallb" {
     name  = "configInline.address-pools[0].protocol"
     value = "layer2"
   }
+
   set {
     name  = "configInline.address-pools[0].addresses[0]"
     value = "192.168.0.240-192.168.0.250"
@@ -29,5 +31,9 @@ resource "helm_release" "nginx_ingress" {
   repository = "https://helm.nginx.com/stable"
   chart      = "nginx-ingress"
   namespace  = "kube-system"
-}
 
+  set {
+    name  = "defaultBackend.enabled"
+    value = false
+  }
+}

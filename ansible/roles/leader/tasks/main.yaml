@@ -2,12 +2,12 @@
   become: yes
   copy:
     content: 'kube-master'
-    dest: /etc/hosts
+    dest: /etc/hostname
 
 - name: Update host file 
   become: yes
   lineinfile:
-    path: /etc/hostname
+    path: /etc/hosts
     line: 127.0.1.1       kube-master
     create: yes
 

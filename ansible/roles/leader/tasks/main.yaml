@@ -2,7 +2,7 @@
   become: yes
   copy:
     content: 'kube-master'
-    dest: /etc/hostname
+    dest: /etc/hosts
 
 - name: Update host file 
   become: yes

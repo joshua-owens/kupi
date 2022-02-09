@@ -1,3 +1,16 @@
+- name: Update hostname
+  become: yes
+  copy:
+    content: 'kube-master'
+    dest: /etc/hostname
+
+- name: Update host file 
+  become: yes
+  lineinfile:
+    path: /etc/hostname
+    line: 127.0.1.1       kube-master
+    create: yes
+
 - name: Install K3s
   shell: curl -sfL https://get.k3s.io | sh -
   become: yes 

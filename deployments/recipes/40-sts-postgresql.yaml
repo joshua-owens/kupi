@@ -55,37 +55,12 @@ spec:
               key: postgresql-postgres-password
         - name: POSTGRES_DB
           value: recipes
-        image: docker.io/bitnami/postgresql:11.5.0-debian-9-r60
+        image: postgres:11
         imagePullPolicy: IfNotPresent
-        livenessProbe:
-          exec:
-            command:
-            - sh
-            - -c
-            - exec pg_isready -U "postgres" -d "wiki" -h 127.0.0.1 -p 5432
-          failureThreshold: 6
-          initialDelaySeconds: 30
-          periodSeconds: 10
-          successThreshold: 1
-          timeoutSeconds: 5
         ports:
         - containerPort: 5432
           name: postgresql
           protocol: TCP
-        readinessProbe:
-          exec:
-            command:
-            - sh
-            - -c
-            - -e
-            - |
-              pg_isready -U "postgres" -d "wiki" -h 127.0.0.1 -p 5432
-              [ -f /opt/bitnami/postgresql/tmp/.initialized ]
-          failureThreshold: 6
-          initialDelaySeconds: 5
-          periodSeconds: 10
-          successThreshold: 1
-          timeoutSeconds: 5
         resources:
           requests:
             cpu: 250m

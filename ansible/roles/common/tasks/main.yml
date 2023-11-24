@@ -25,6 +25,12 @@
     update_cache: yes
     upgrade: yes
 
+# https://docs.k3s.io/installation/requirements?os=debian#operating-systems
+- name: Disable ufw
+  become: yes
+  community.general.ufw:
+    state: disabled
+
 - name: Check cmdline.txt
   command: grep -Fxq "cgroup" /boot/firmware/cmdline.txt
   register: check_cmdline

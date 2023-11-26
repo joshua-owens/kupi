@@ -31,6 +31,10 @@
   community.general.ufw:
     state: disabled
 
+- name: Enable legacy iptables
+  become: yes
+  command: update-alternatives --set iptables /usr/sbin/iptables-legacy
+
 - name: Check cmdline.txt
   command: grep -Fxq "cgroup" /boot/firmware/cmdline.txt
   register: check_cmdline

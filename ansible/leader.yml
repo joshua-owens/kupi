@@ -1,4 +1,5 @@
 - hosts: leader 
   roles:
+    - pi 
     - common
     - leader 

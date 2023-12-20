@@ -1,5 +1,4 @@
-- hosts: workers 
+- hosts: droplet 
   roles:
-    - pi 
     - common
     - worker 

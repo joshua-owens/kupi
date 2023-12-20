@@ -5,3 +5,6 @@
 
 - name: Include workers play
   import_playbook: workers.yml
+
+- name: Include public worker play
+  import_playbook: droplet.yml

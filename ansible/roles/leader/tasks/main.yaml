@@ -1,18 +1,18 @@
 - name: Update hostname
   become: yes
   copy:
-    content: 'kube-master'
+    content: "{{ inventory_hostname }}"
     dest: /etc/hostname
 
 - name: Update host file 
   become: yes
   lineinfile:
     path: /etc/hosts
-    line: 127.0.1.1       kube-master
+    line: 127.0.1.1      {{ inventory_hostname }} 
     create: yes
 
 - name: Install K3s
-  shell: curl -sfL https://get.k3s.io | sh -
+  shell: curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="--tls-san droplet.taildf5ff.ts.net" sh -
   become: yes 
   environment:
     K3S_KUBECONFIG_MODE: "644"
@@ -28,7 +28,7 @@
   replace:
     path: /etc/rancher/k3s/k3s.yaml
     regexp: '127.0.0.1'
-    replace: "{{ ansible_default_ipv4.address }}"
+    replace: "{{ inventory_hostname }}"
     backup: yes
 
 - name: Copy kubeconfig contents
@@ -40,5 +40,5 @@
   add_host:
     name:   "K3S_LEADER"
     token:  "{{ k3s_token.stdout }}"
-    ip: "{{ ansible_default_ipv4.address }}"
+    host_name: "{{ inventory_hostname }}"
     kubeconfig: "{{ kubeconfig_contents.stdout }}"

@@ -12,6 +12,8 @@
 - name: Install K3s
   shell: curl -sfL https://get.k3s.io | sh -s -
   become: yes
+  args:
+    warn: no
   environment:
     K3S_KUBECONFIG_MODE: "644"
     K3S_URL: "https://{{ hostvars['K3S_LEADER']['host_name'] }}:6443"

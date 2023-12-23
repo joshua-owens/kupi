@@ -14,35 +14,55 @@
   become: yes
   command: update-alternatives --set iptables /usr/sbin/iptables-legacy
 
-- name: Install Docker prerequisites
+# Docker
+- name: Install required packages
   become: yes
   apt:
     name: "{{ item }}"
     state: present
-    update_cache: yes
   loop:
-    - apt-transport-https
     - ca-certificates
     - curl
-    - software-properties-common
-    - gnupg-agent
+    - gnupg
 
 - name: Add Docker's official GPG key
   become: yes
-  ansible.builtin.shell: curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+  shell: |
+    install -m 0755 -d /etc/apt/keyrings
+    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --batch --yes --dearmor -o /etc/apt/keyrings/docker.gpg
+    chmod a+r /etc/apt/keyrings/docker.gpg
 
-- name: Set up the Docker stable repository
+- name: Add Docker apt repository
   become: yes
-  ansible.builtin.shell: add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+  shell: |
+    echo \
+    "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+    $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
+    sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 
-- name: Update apt package list (again)
-  become: yes
-  apt: 
-    update_cache: yes
-
-- name: Install Docker
+- name: Update apt cache (again)
   become: yes
   apt:
-    name: docker
+    update_cache: yes
+
+- name: Install Docker and related packages
+  become: yes
+  apt:
+    name: "{{ item }}"
     state: present
-  
+  loop:
+    - docker-ce
+    - docker-ce-cli
+    - containerd.io
+    - docker-buildx-plugin
+    - docker-compose-plugin
+
+
+- name: Add user to docker group
+  become: yes
+  shell: |
+    if ! getent group docker > /dev/null; then
+      groupadd docker
+      usermod -aG docker {{ ansible_user }}
+      newgrp docker
+    fi

@@ -1,5 +1,5 @@
 - name: Install K3s
-  shell: curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="--tls-san {{ hostvars['K3S_LEADER']['host_name'] }}" sh -s -
+  shell: curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="--prefer-bundled-bin --disable=traefik --disable=servicel" sh -s -
   become: yes
   environment:
     K3S_KUBECONFIG_MODE: "644"

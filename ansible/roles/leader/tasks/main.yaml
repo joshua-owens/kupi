@@ -12,7 +12,7 @@
     create: yes
 
 - name: Install K3s
-  shell: curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="--tls-san droplet.taildf5ff.ts.net" sh -
+  shell: curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="server --prefer-bundled-bin --disable=traefik --disable=servicelb" sh -
   become: yes 
   environment:
     K3S_KUBECONFIG_MODE: "644"

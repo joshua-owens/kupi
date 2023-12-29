@@ -22,7 +22,7 @@ resource "helm_release" "metallb" {
 }
 
 # These need to be commmented out for the first run
-# as they will fail due the issue below if the metallb
+# as `terraform plan` fail due to the issue below if the metallb
 # chart hasn't been ran yet 
 # https://github.com/hashicorp/terraform-provider-kubernetes-alpha/issues/235
 resource "kubernetes_manifest" "metallb_ip_pool" {

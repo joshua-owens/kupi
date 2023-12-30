@@ -10,10 +10,6 @@
 #   community.general.ufw:
 #     state: disabled
 
-# - name: Enable legacy iptables
-#   become: yes
-#   command: update-alternatives --set iptables /usr/sbin/iptables-legacy
-
 # Docker
 - name: Install required packages
   become: yes

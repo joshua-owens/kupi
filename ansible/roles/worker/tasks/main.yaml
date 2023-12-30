@@ -10,7 +10,7 @@
     content: "{{ hostvars['K3S_LEADER']['kubeconfig'] }}"
 
 - name: Install K3s
-  shell: curl -sfL https://get.k3s.io | sh -s -
+  shell: curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="--prefer-bundled-bin --node-external-ip={{ inventory_hostname }}" sh -s -
   become: yes
   args:
     warn: no

@@ -13,3 +13,15 @@ variable "docker_access_token" {
   description = "The access token for the Docker registry"
   type        = string
 }
+
+variable "postgres_user" {
+  description = "The username for the PostgreSQL database"
+  type        = string
+  default     = "postgres"
+}
+
+variable "postgres_password" {
+  description = "The password for the PostgreSQL database"
+  type        = string
+  
+}

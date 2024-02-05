@@ -143,3 +143,150 @@ resource "kubernetes_service" "fiddy" {
     type = "LoadBalancer"
   }
 }
+
+resource "kubernetes_secret" "postgres" {
+  metadata {
+    name = "postgres-secret"
+  }
+
+  data = {
+    username = var.postgres_user
+    password = var.postgres_password
+  }
+}
+
+resource "kubernetes_persistent_volume" "postgres" {
+  metadata {
+    name = "postgres"
+  }
+
+  spec {
+    capacity = {
+      storage = "10Gi"
+    }
+
+    access_modes = ["ReadWriteOnce"]
+
+    storage_class_name = "local-path"
+
+    persistent_volume_source {
+      host_path {
+        path = "/postgres-data"
+      }
+    }
+  }
+}
+
+resource "kubernetes_persistent_volume_claim" "postgres" {
+  metadata {
+    name = "postgres"
+  }
+
+  spec {
+    volume_name = kubernetes_persistent_volume.postgres.metadata[0].name
+
+    access_modes = ["ReadWriteOnce"]
+
+    storage_class_name = "local-path"
+
+    resources {
+      requests = {
+        storage = "10Gi"
+      }
+    }
+  }
+}
+
+resource "kubernetes_stateful_set" "postgres" {
+  metadata {
+    name = "postgres"
+  }
+
+  spec {
+    selector {
+      match_labels = {
+        App = "postgres"
+      }
+    }
+
+    service_name = "postgres"
+    replicas     = 1
+
+    template {
+      metadata {
+        labels = {
+          App = "postgres"
+        }
+      }
+
+      spec {
+        node_selector = {
+          "kubernetes.io/hostname" = "100.113.101.41"
+        }
+
+        container {
+          image = "postgres:latest"
+          name  = "postgres"
+
+          env {
+            name = "POSTGRES_USER"
+            value_from {
+              secret_key_ref {
+                name = "postgres-secret"
+                key  = "username"
+              }
+            }
+          }
+          env {
+            name = "POSTGRES_PASSWORD"
+            value_from {
+              secret_key_ref {
+                name = "postgres-secret"
+                key  = "password"
+              }
+            }
+          }
+
+          port {
+            container_port = 5432
+          }
+
+          volume_mount {
+            mount_path = "/var/lib/postgresql/data"
+            name       = "postgres"
+          }
+        }
+      }
+    }
+
+    volume_claim_template {
+      metadata {
+        name = "postgres"
+      }
+
+      spec {
+        access_modes = ["ReadWriteOnce"]
+        resources {
+          requests = {
+            storage = "10Gi"
+          }
+        }
+      }
+    }
+  }
+}
+
+resource "kubernetes_service" "postgres" {
+  metadata {
+    name = "postgres-service"
+  }
+  spec {
+    selector = {
+      app = "postgres"
+    }
+    port {
+      port        = 5432
+      target_port = 5432
+    }
+  }
+}

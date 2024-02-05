@@ -25,3 +25,21 @@
   service:
     name: nginx
     state: restarted
+
+- name: Restart Nginx
+  service:
+    name: nginx
+    state: stopped
+
+- name: Install Certbot
+  include_role:
+    name: geerlingguy.certbot
+
+- name: Generate Let's Encrypt certificate
+  command: >
+    certbot certonly --standalone -d fiddy.jowens.dev --email me@jowens.dev --agree-tos --non-interactive
+
+- name: Restart Nginx
+  service:
+    name: nginx
+    state: restarted

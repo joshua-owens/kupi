@@ -2,6 +2,25 @@ provider "kubernetes" {
   config_path = "~/.kube/config"
 }
 
+resource "kubernetes_secret" "docker_registry" {
+  metadata {
+    name = "docker-hub-credentials"
+  }
+
+  data = {
+    ".dockerconfigjson" = jsonencode({
+      "auths" = {
+        "https://index.docker.io/v1/" = {
+          "username" = var.docker_username
+          "password" = var.docker_access_token
+        }
+      }
+    })
+  }
+
+  type = "kubernetes.io/dockerconfigjson"
+}
+
 provider "helm" {
   kubernetes {
     config_path = "~/.kube/config"
@@ -37,7 +56,7 @@ resource "kubernetes_manifest" "metallb_ip_pool" {
       "addresses" = ["192.168.1.240-192.168.1.250"]
     }
   }
-  depends_on = [ helm_release.metallb ]
+  depends_on = [helm_release.metallb]
 }
 
 resource "kubernetes_manifest" "l2advertisement" {
@@ -66,4 +85,61 @@ resource "helm_release" "ingress_nginx" {
     kubernetes_namespace.ingress_nginx,
     helm_release.metallb,
   ]
+}
+
+resource "kubernetes_deployment" "fiddy" {
+  metadata {
+    name = "fiddy"
+    labels = {
+      App = "Fiddy"
+    }
+  }
+
+  spec {
+    replicas = 3
+    selector {
+      match_labels = {
+        App = "Fiddy"
+      }
+    }
+
+    template {
+      metadata {
+        labels = {
+          App = "Fiddy"
+        }
+      }
+
+      spec {
+        image_pull_secrets {
+          name = kubernetes_secret.docker_registry.metadata[0].name
+        }
+
+        container {
+          image = "lpod64/fiddy:latest"
+          name  = "fiddy"
+
+          port {
+            container_port = 4000
+          }
+        }
+      }
+    }
+  }
+}
+
+resource "kubernetes_service" "fiddy" {
+  metadata {
+    name = "fiddy-service"
+  }
+  spec {
+    selector = {
+      App = "Fiddy"
+    }
+    port {
+      port        = 80
+      target_port = 4000
+    }
+    type = "LoadBalancer"
+  }
 }

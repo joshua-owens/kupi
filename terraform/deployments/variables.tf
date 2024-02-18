@@ -1,3 +1,4 @@
+
 variable "address_range" {
   description = "The IP address range for MetalLB to use for load balancing"
   type        = string
@@ -23,5 +24,17 @@ variable "postgres_user" {
 variable "postgres_password" {
   description = "The password for the PostgreSQL database"
   type        = string
-  
 }
+
+variable "postgres_host" {
+  description = "The hostname for the PostgreSQL database"
+  type        = string
+  default     = "postgres"
+}
+
+variable "postgres_port" {
+  description = "The port for the PostgreSQL database"
+  type        = number
+  default     = 5432
+}
+

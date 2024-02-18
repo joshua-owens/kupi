@@ -38,3 +38,8 @@ variable "postgres_port" {
   default     = 5432
 }
 
+variable "gim_backend_secret" {
+  description = "The secret for the GIM backend"
+  type        = string
+}
+

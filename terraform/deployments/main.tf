@@ -157,3 +157,188 @@ resource "kubernetes_secret" "postgres" {
   }
 }
 
+
+resource "kubernetes_secret" "gim" {
+  metadata {
+    name = "gim-secret"
+  }
+
+  data = {
+    backend_secret = var.gim_backend_secret
+  }
+}
+
+resource "kubernetes_deployment" "gim-frontend" {
+  metadata {
+    name = "gim-frontend"
+    labels = {
+      App = "gim-frontend"
+    }
+  }
+
+  spec {
+    replicas = 3
+    selector {
+      match_labels = {
+        App = "gim-frontend"
+      }
+    }
+
+    template {
+      metadata {
+        labels = {
+          App = "gim-frontend"
+        }
+      }
+
+      spec {
+        image_pull_secrets {
+          name = kubernetes_secret.docker_registry.metadata[0].name
+        }
+
+        container {
+          image = "lpod64/gim-frontend:latest"
+          name  = "gim-frontend"
+
+          port {
+            container_port = 4000
+          }
+
+          env {
+            name  = "HOST_URL"
+            value = "https://gim.jowens.dev"
+          }
+        }
+      }
+    }
+  }
+}
+
+resource "kubernetes_service" "gim-frontend" {
+  metadata {
+    name = "gim-frontend-service"
+  }
+  spec {
+    selector = {
+      App = "gim-frontend"
+    }
+    port {
+      port        = 80
+      target_port = 4000
+    }
+    type = "LoadBalancer"
+  }
+}
+
+resource "kubernetes_deployment" "gim-backend" {
+  metadata {
+    name = "gim-backend"
+    labels = {
+      App = "gim-backend"
+    }
+  }
+
+  spec {
+    replicas = 3
+    selector {
+      match_labels = {
+        App = "gim-backend"
+      }
+    }
+
+    template {
+      metadata {
+        labels = {
+          App = "gim-backend"
+        }
+      }
+
+      spec {
+        image_pull_secrets {
+          name = kubernetes_secret.docker_registry.metadata[0].name
+        }
+
+        container {
+          image = "lpod64/gim-backend:latest"
+          name  = "gim-backend"
+
+          port {
+            container_port = 8080 
+          }
+
+          env {
+            name  = "PG_USER"
+            value_from {
+              secret_key_ref {
+                name = "postgres-secret"
+                key  = "username"
+              }
+            }
+          }
+
+          env {
+            name  = "PG_PASSWORD"
+            value_from {
+              secret_key_ref {
+                name = "postgres-secret"
+                key  = "password"
+              }
+            }
+          }
+
+          env {
+            name  = "PG_HOST"
+            value_from {
+              secret_key_ref {
+                name = "postgres-secret"
+                key  = "host"
+              }
+            }
+          }
+
+          env {
+            name  = "PG_PORT"
+            value_from {
+              secret_key_ref {
+                name = "postgres-secret"
+                key  = "port"
+              }
+            }
+          }
+
+          env {
+            name  = "PG_DB"
+            value = "gim"
+          }
+
+          env {
+            name  = "BACKEND_SECRET"
+            value_from {
+              secret_key_ref {
+                name = "gim-secret"
+                key  = "backend_secret"
+              }
+            }
+          }
+
+        }
+      }
+    }
+  }
+}
+
+resource "kubernetes_service" "gim-backend" {
+  metadata {
+    name = "gim-backend-service"
+  }
+  spec {
+    selector = {
+      App = "gim-backend"
+    }
+    port {
+      port        = 80
+      target_port = 8080 
+    }
+    type = "LoadBalancer"
+  }
+}
